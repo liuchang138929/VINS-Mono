@@ -84,6 +84,7 @@ void FeatureTracker::readImage(const cv::Mat &_img, double _cur_time)
     TicToc t_r;
     cur_time = _cur_time;
 
+    // CLAHE (Contrast Limited Adaptive Histogram Equalization.)
     if (EQUALIZE)
     {
         cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
@@ -132,6 +133,8 @@ void FeatureTracker::readImage(const cv::Mat &_img, double _cur_time)
         rejectWithF();
         ROS_DEBUG("set mask begins");
         TicToc t_m;
+        // mask the points that have been seen as LK points.
+        // ---comment by chang
         setMask();
         ROS_DEBUG("set mask costs %fms", t_m.toc());
 
@@ -175,6 +178,7 @@ void FeatureTracker::rejectWithF()
         vector<cv::Point2f> un_cur_pts(cur_pts.size()), un_forw_pts(forw_pts.size());
         for (unsigned int i = 0; i < cur_pts.size(); i++)
         {
+            // from imaging coordinate to pixl coordinate
             Eigen::Vector3d tmp_p;
             m_camera->liftProjective(Eigen::Vector2d(cur_pts[i].x, cur_pts[i].y), tmp_p);
             tmp_p.x() = FOCAL_LENGTH * tmp_p.x() / tmp_p.z() + COL / 2.0;
@@ -188,6 +192,9 @@ void FeatureTracker::rejectWithF()
         }
 
         vector<uchar> status;
+
+        // just use RANSAC to select the points or outlier rejection
+        // ---comment by chang
         cv::findFundamentalMat(un_cur_pts, un_forw_pts, cv::FM_RANSAC, F_THRESHOLD, 0.99, status);
         int size_a = cur_pts.size();
         reduceVector(prev_pts, status);
