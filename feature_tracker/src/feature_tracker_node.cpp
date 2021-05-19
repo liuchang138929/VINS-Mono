@@ -62,7 +62,6 @@ void img_callback(const sensor_msgs::ImageConstPtr &img_msg)
         PUB_THIS_FRAME = false;
 
 // encode the image to "mono" type and transform to CV type
-// ---comment by chang
     cv_bridge::CvImageConstPtr ptr;
     if (img_msg->encoding == "8UC1")
     {
