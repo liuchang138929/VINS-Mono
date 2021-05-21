@@ -159,7 +159,7 @@ void img_callback(const sensor_msgs::ImageConstPtr &img_msg)
         feature_points->channels.push_back(velocity_x_of_point);
         feature_points->channels.push_back(velocity_y_of_point);
         ROS_DEBUG("publish %f, at %f", feature_points->header.stamp.toSec(), ros::Time::now().toSec());
-        // skip the first image; since no optical speed on frist image
+        // skip the first image; since no optical speed on first image
         if (!init_pub)
         {
             init_pub = 1;
