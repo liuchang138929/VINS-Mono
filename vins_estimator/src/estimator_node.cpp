@@ -264,6 +264,7 @@ void process()
                 }
             }
             // set relocalization frame
+            // TODO did not understand
             sensor_msgs::PointCloudConstPtr relo_msg = NULL;
             while (!relo_buf.empty())
             {
